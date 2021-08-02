@@ -5,7 +5,8 @@ $(document).ready(function () {
     position: 'absolute',
     opacity: 0.2,
     backgroundColor: 'blue',
-    display: 'none'
+    display: 'none',
+    pointerEvents: 'none'
   })
 
   let lensPos = {};

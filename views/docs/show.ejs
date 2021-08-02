@@ -37,7 +37,7 @@ main .grid > * {
       <% if (doc.mimetype === "application/pdf") { %>
         PDF not supported yet
       <% } else if (doc.mimetype.includes('image')) { %>
-        <img id="doc-img" src="<%= doc.url %>">
+        <img crossorigin="anonymous" id="doc-img" src="<%= doc.url %>">
         <script src="/scripts/lens.js"></script>
       <% } else { %>
         Unsupported type: <% doc.mimetype %>
