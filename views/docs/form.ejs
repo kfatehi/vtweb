@@ -1,0 +1,47 @@
+<input type="file">
+
+<script>
+  $(document).ready(function () {
+    const fileReader = new FileReader();
+    let file = null;
+
+    $('input').on('change', function () {
+      file = this.files[0];
+      fileReader.readAsArrayBuffer(file);
+    });
+
+    fileReader.addEventListener('load', async (event) => {
+      let sourceBuffer = fileReader.result;
+      var formData = new FormData();
+
+      formData.append("upload", file);
+
+      $.ajax({
+        // Your server script to process the upload
+        url: "/docs",
+        type: 'POST',
+
+        // Form data
+        data: formData,
+
+        // Tell jQuery not to process data or worry about content-type
+        // You *must* include these options!
+        cache: false,
+        contentType: false,
+        processData: false,
+
+        // Custom XMLHttpRequest
+        xhr: function () {
+          var myXhr = $.ajaxSettings.xhr();
+          myXhr.addEventListener('load', () => {
+            // noop for initial upload
+          })
+          return myXhr;
+        },
+        success: (data)=>{
+          window.location.href = data.location;
+        }
+      });
+    });
+  })
+</script>

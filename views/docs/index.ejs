@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <link rel="stylesheet" href="/stylesheets/pico.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
-    <title>Profile</title>
-    <script src="/scripts/lib/jquery.min.js"></script>
+    <title>Docs</title>
     <style>
 :root:not([data-theme=dark]), [data-theme=light] {
     --nav-background: rgba(255, 255, 255, 0.7);
@@ -31,10 +30,22 @@ main .grid > * {
   </head>
 
   <body>
-    <%- include('header'); -%>
+    <%- include('../header'); -%>
 
     <main class="container">
-      <a href="/docs"><button>Document Explorer</button></a>
+      <a href="/docs/new"><button>New Document</button></a>
+      <% if (docs.length) { %>
+        <table>
+          <% for (let doc of docs) { %>
+            <tr>
+              <td><%= doc.title %></td>
+              <td><a href="/docs/<%= doc.id %>">Show</a></td>
+            </tr>
+          <% } %>
+        </table>
+      <% } else { %>
+        No documents have been created yet.
+      <% } %>
     </main>
 
   </body>

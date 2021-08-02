@@ -14,7 +14,10 @@ module.exports = async function() {
     CREATE TABLE IF NOT EXISTS docs (
         id								SERIAL PRIMARY KEY,
         user_id						INTEGER NOT NULL,
-        url								VARCHAR(200) NOT NULL
+				title							VARCHAR NOT NULL,
+				originalname			VARCHAR NOT NULL,
+				mimetype					VARCHAR NOT NULL,
+        url								VARCHAR NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS clippings (

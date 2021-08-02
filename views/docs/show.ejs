@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <link rel="stylesheet" href="/stylesheets/pico.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
-    <title>Profile</title>
     <script src="/scripts/lib/jquery.min.js"></script>
+    <title><%= doc.title %></title>
     <style>
 :root:not([data-theme=dark]), [data-theme=light] {
     --nav-background: rgba(255, 255, 255, 0.7);
@@ -31,10 +31,17 @@ main .grid > * {
   </head>
 
   <body>
-    <%- include('header'); -%>
+    <%- include('../header'); -%>
 
     <main class="container">
-      <a href="/docs"><button>Document Explorer</button></a>
+      <% if (doc.mimetype === "application/pdf") { %>
+        PDF not supported yet
+      <% } else if (doc.mimetype.includes('image')) { %>
+        <img id="doc-img" src="<%= doc.url %>">
+        <script src="/scripts/lens.js"></script>
+      <% } else { %>
+        Unsupported type: <% doc.mimetype %>
+      <% } %>
     </main>
 
   </body>

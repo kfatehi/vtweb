@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var myaccountRouter = require('./routes/myaccount');
 var usersRouter = require('./routes/users');
+var docsRouter = require('./routes/docs');
 const expressSession = require('express-session');
 const pgSession = require('connect-pg-simple')(expressSession);
 const dbPool = require('./db');
@@ -51,6 +52,7 @@ app.use(passport.authenticate('session'));
 app.use('/', indexRouter);
 app.use('/', authRouter);
 app.use('/myaccount', myaccountRouter);
+app.use('/docs', docsRouter);
 app.use('/users', usersRouter);
 
 module.exports = app;
