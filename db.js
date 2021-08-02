@@ -1,3 +1,9 @@
-var sqlite3 = require('sqlite3');
+const Pool = require('pg-pool');
 
-module.exports = new sqlite3.Database('db.sqlite3');
+const pool = new Pool({
+  port: 5432,
+  ssl: false,
+  max: 5
+})
+
+module.exports = pool;

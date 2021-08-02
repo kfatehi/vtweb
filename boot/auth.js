@@ -13,8 +13,11 @@ module.exports = function() {
   // that the password is correct and then invoke `cb` with a user object, which
   // will be set at `req.user` in route handlers after authentication.
   passport.use(new Strategy(function(username, password, cb) {
-    db.get('SELECT rowid AS id, * FROM users WHERE username = ?', [ username ], function(err, row) {
+    db.query('SELECT * FROM users WHERE username = $1', [ username ], function(err, results) {
       if (err) { return cb(err); }
+
+      let row = results.rows[0];
+      
       if (!row) { return cb(null, false, { message: 'Incorrect username or password.' }); }
       
       crypto.pbkdf2(password, row.salt, 10000, 32, 'sha256', function(err, hashedPassword) {
@@ -42,12 +45,14 @@ module.exports = function() {
   // serializing, and querying the user record by ID from the database when
   // deserializing.
   passport.serializeUser(function(user, cb) {
+    console.log("serializing user")
     process.nextTick(function() {
       cb(null, { id: user.id, username: user.username });
     });
   });
 
   passport.deserializeUser(function(user, cb) {
+    console.log("deserializing user")
     process.nextTick(function() {
       return cb(null, user);
     });

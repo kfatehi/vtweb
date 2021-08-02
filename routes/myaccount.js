@@ -8,11 +8,10 @@ var router = express.Router();
 router.get('/',
   ensureLoggedIn(),
   function(req, res, next) {
-    db.get('SELECT rowid AS id, username, name FROM users WHERE rowid = ?', [ req.user.id ], function(err, row) {
+    db.query('SELECT id, username, name FROM users WHERE id = $1', [ req.user.id ], function(err, results) {
       if (err) { return next(err); }
     
-      // TODO: Handle undefined row.
-    
+      let row = results.rows[0];
       var user = {
         id: row.id.toString(),
         username: row.username,

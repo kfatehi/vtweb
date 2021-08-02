@@ -8,6 +8,9 @@ var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var myaccountRouter = require('./routes/myaccount');
 var usersRouter = require('./routes/users');
+const expressSession = require('express-session');
+const pgSession = require('connect-pg-simple')(expressSession);
+const dbPool = require('./db');
 
 var app = express();
 
@@ -25,7 +28,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+app.use(expressSession({
+  store: new pgSession({
+    pool: dbPool,
+    tableName: 'session'
+  }),
+  secret: process.env.COOKIE_SECRET,
+  resave: false, saveUninitialized: false,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+}));
 app.use(function(req, res, next) {
   var msgs = req.session.messages || [];
   res.locals.messages = msgs;
