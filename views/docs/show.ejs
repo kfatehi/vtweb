@@ -1,48 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
-    <link rel="stylesheet" href="/stylesheets/pico.css">
-    <link rel="stylesheet" href="/stylesheets/style.css">
-    <script src="/scripts/lib/jquery.min.js"></script>
-    <title><%= doc.title %></title>
-    <style>
-:root:not([data-theme=dark]), [data-theme=light] {
-    --nav-background: rgba(255, 255, 255, 0.7);
-    --nav-border: rgba(115, 130, 140, 0.2);
-}
 
-[data-theme=dark] {
-    --nav-background: rgba(16, 24, 30, 0.8);
-    --nav-border: rgba(115, 130, 140, 0.2);
-}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+  <link rel="stylesheet" href="/stylesheets/pico.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="/scripts/lib/jquery.min.js"></script>
+  <title><%= doc.title %></title>
+  <style>
+    :root:not([data-theme=dark]),
+    [data-theme=light] {
+      --nav-background: rgba(255, 255, 255, 0.7);
+      --nav-border: rgba(115, 130, 140, 0.2);
+    }
 
-main .grid > * {
-  margin-bottom: var(--spacing);
-}
-@media (min-width: 992px) {
-  main .grid {
-    grid-column-gap: var(--spacing);
-    grid-template-columns: 25% auto;
-  }
-}
-    </style>
-  </head>
+    [data-theme=dark] {
+      --nav-background: rgba(16, 24, 30, 0.8);
+      --nav-border: rgba(115, 130, 140, 0.2);
+    }
 
-  <body>
-    <%- include('../header'); -%>
+    main .grid>* {
+      margin-bottom: var(--spacing);
+    }
 
-    <main class="container">
-      <% if (doc.mimetype === "application/pdf") { %>
-        PDF not supported yet
-      <% } else if (doc.mimetype.includes('image')) { %>
-        <img crossorigin="anonymous" id="doc-img" src="<%= doc.url %>">
-        <script src="/scripts/lens.js"></script>
-      <% } else { %>
-        Unsupported type: <% doc.mimetype %>
-      <% } %>
-    </main>
+    @media (min-width: 992px) {
+      main .grid {
+        grid-column-gap: var(--spacing);
+        grid-template-columns: 25% auto;
+      }
+    }
+  </style>
+</head>
 
-  </body>
+<body>
+  <%- include('../header'); -%>
+
+  <main class="container">
+    <% if (doc.mimetype === "application/pdf") { %>
+      
+    <canvas>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.9.359/build/pdf.min.js"></script>
+    <script>
+      
+      $(document).ready(()=>{
+     
+        pdfjsLib.getDocument("<%= doc.url %>").promise.then(function (doc) {
+          // you can now use *pdf* here
+          console.log("the pdf has ", doc.numPages, "page(s).")
+
+          doc.getPage(doc.numPages).then(function (page) {
+
+            // you can now use *page* here
+            var viewport = page.getViewport({scale: 1.0});
+            var canvas = document.querySelector("canvas")
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            page.render({
+              canvasContext: canvas.getContext('2d'),
+              viewport: viewport
+            });
+          });
+
+        });
+      })
+        
+    </script>
+    <% } else if (doc.mimetype.includes('image')) { %>
+    <img crossorigin="anonymous" id="doc-img" src="<%= doc.url %>">
+    <script src="/scripts/lens.js"></script>
+    <% } else { %>
+    Unsupported type: <% doc.mimetype %>
+    <% } %>
+  </main>
+
+</body>
+
 </html>
