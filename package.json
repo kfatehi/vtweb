@@ -36,7 +36,9 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pg": "^8.6.0",
-    "pg-pool": "^3.3.0",
-    "sqlite3": "^5.0.2"
+    "pg-pool": "^3.3.0"
+  },
+  "devDependencies": {
+    "node-dev": "^7.0.0"
   }
 }
